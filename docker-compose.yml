@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app:
+    container_name: todo_php
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ${PWD}/work:/var/www/html
+    ports:
+      - "80:80"
+    network_mode: "todo-network" # カスタムネットワークの名前
+
+  db1:
+    container_name: todo_mysql
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+    volumes:
+      # MySQLの設定ファイル
+      - ./mysql/mysql_conf:/etc/mysql/conf.d
+    network_mode: "todo-network"
+
+networks:
+  todo-network:
